@@ -82,3 +82,19 @@ model Listing {
 
   @@index([type, cityId])
 }
+model RefreshToken {
+  id         String   @id @default(cuid())
+
+  tokenHash  String
+
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  expiresAt  DateTime
+
+  revoked    Boolean  @default(false)
+
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+}
