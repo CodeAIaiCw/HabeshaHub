@@ -1,0 +1,50 @@
+services:
+  postgres:
+    image: postgis/postgis:16-3.4
+    container_name: habeshahub-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: habeshahub
+      POSTGRES_PASSWORD: habeshahub
+      POSTGRES_DB: habeshahub
+    ports:
+      - "5433:5432"
+    volumes:
+      - habeshahub_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U habeshahub -d habeshahub"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: habeshahub-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.12
+    container_name: habeshahub-meilisearch
+    restart: unless-stopped
+    environment:
+      MEILI_MASTER_KEY: dev_master_key
+      MEILI_ENV: development
+    ports:
+      - "7700:7700"
+    volumes:
+      - habeshahub_meili_data:/meili_data
+
+  adminer:
+    image: adminer:latest
+    container_name: habeshahub-adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+
+volumes:
+  habeshahub_postgres_data:
+  habeshahub_meili_data:
