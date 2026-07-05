@@ -1,3 +1,4 @@
+import { AuthModule } from './auth/auth.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
@@ -13,10 +14,9 @@ import { PrismaService } from './prisma.service';
       load: [configuration],
       envFilePath: ['apps/api/.env', '.env'],
     }),
+    AuthModule,
   ],
-
   controllers: [AppController],
-
   providers: [PrismaService],
 })
 export class AppModule {}
