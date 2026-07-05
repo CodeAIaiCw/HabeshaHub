@@ -25,16 +25,40 @@ enum ListingType {
 }
 
 model User {
-  id          String   @id @default(cuid())
-  email       String   @unique
-  name        String?
-  role        UserRole @default(USER)
-  cityId      String?
-  city        City?    @relation(fields: [cityId], references: [id])
-  language    String   @default("en")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  listings    Listing[]
+  id              String   @id @default(cuid())
+
+  // Identity
+  email           String   @unique
+  passwordHash    String
+
+  // Profile
+  name            String?
+  avatarUrl       String?
+  phone           String?
+  bio             String?
+
+  // Authorization
+  role            UserRole @default(USER)
+
+  // Location
+  cityId          String?
+  city            City?    @relation(fields: [cityId], references: [id])
+
+  // Preferences
+  language        String   @default("en")
+
+  // Verification
+  emailVerified   Boolean  @default(false)
+
+  // Status
+  active          Boolean  @default(true)
+
+  // Relations
+  listings        Listing[]
+
+  // Audit
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 model City {
