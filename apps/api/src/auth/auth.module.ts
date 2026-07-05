@@ -15,17 +15,8 @@ import { AuthService } from './auth.service';
       },
     }),
   ],
-
   controllers: [AuthController],
-
-  providers: [
-    AuthService,
-    PrismaService,
-  ],
-
-  exports: [
-    AuthService,
-    JwtModule,
-  ],
+  providers: [AuthService, PrismaService],
+  exports: [AuthService, JwtModule],
 })
 export class AuthModule {}
