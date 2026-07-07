@@ -32,19 +32,13 @@ export class ListingsService {
   }
 
   async findAll() {
-    return this.prisma.listing.findMany({
-      where: {
-        published: true,
-      },
-      include: {
-        city: true,
-        photos: true,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
-  }
+  const listings = await this.prisma.listing.findMany();
+
+  console.log('=== Listings from Prisma ===');
+  console.log(JSON.stringify(listings, null, 2));
+
+  return listings;
+}
 
   async findOne(id: string) {
     return this.prisma.listing.findUnique({
@@ -63,4 +57,37 @@ export class ListingsService {
       },
     });
   }
+
+async publish(id: string, ownerId: string) {
+  const listing = await this.prisma.listing.findFirst({
+    where: {
+      id,
+      ownerId,
+    },
+  });
+
+  if (!listing) {
+    throw new Error('Listing not found.');
+  }
+
+  return this.prisma.listing.update({
+    where: {
+      id,
+    },
+    data: {
+      published: true,
+    },
+    include: {
+      city: true,
+      owner: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+      photos: true,
+    },
+  });
+}
 }

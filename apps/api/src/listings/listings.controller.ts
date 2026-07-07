@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -27,7 +28,21 @@ export class ListingsController {
   ) {
     return this.listingsService.create(user.id, dto);
   }
-
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/publish')
+  publish(
+    @CurrentUser() user: any,
+    @Param('id') id: string,
+  ) {
+    return this.listingsService.publish(id, user.id);
+  }
+@Get('test')
+test() {
+  return {
+    ok: true,
+    message: 'Listings controller is alive',
+  };
+}
   @Get()
   findAll() {
     return this.listingsService.findAll();
